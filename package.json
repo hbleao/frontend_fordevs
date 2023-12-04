@@ -4,6 +4,12 @@
     "@types/node": "^20.10.3",
     "eslint": "^8.55.0",
     "git-commit-msg-linter": "^5.0.4",
+    "husky": "^8.0.0",
     "typescript": "^5.3.2"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "npx eslint './src'",
+    "lint:fix": "npx eslint ./src/** --fix"
   }
 }
