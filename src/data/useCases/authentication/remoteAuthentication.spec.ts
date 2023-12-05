@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker'
 
 import { RemoteAuthentication } from './remoteAuthentication'
+import { mockAuthentication } from '@/domain/test/mockAuthentication'
 import { HttpClientSpy } from '../../test/mockHttpClient'
-import { mockAuthentication } from '../../../domain/test/mockAuthentication'
 
 type SutTypes = {
   sut: RemoteAuthentication
