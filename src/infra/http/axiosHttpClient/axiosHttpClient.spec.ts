@@ -42,7 +42,6 @@ describe('AxiosHttpClient', () => {
   it('should return the correct statusCode and body', async () => {
     const { sut, mockedAxios } = makeSut()
     const promise = sut.post(factoryPostRequest())
-    console.log(promise)
 
     expect(promise).toEqual(mockedAxios.post.mock.results[0].value)
   })
