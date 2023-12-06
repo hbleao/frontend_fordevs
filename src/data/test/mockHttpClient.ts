@@ -5,7 +5,7 @@ import {
   HttpStatusCode,
 } from '@/data/protocols/http'
 
-export class HttpClientSpy<T, R> implements HttpPostClient<T, R> {
+export class HttpPostClientSpy<T, R> implements HttpPostClient<T, R> {
   public url?: string
   public body?: T
   public response: HttpResponse<R> = {
