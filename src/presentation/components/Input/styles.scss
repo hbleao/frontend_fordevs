@@ -18,11 +18,9 @@ input {
   input {
     width: 100%;
   }
+}
 
-  .status {
-    position: absolute;
-    top: 12px;
-    right: 8px;
-    cursor: help;
-  }
+.errorMessage {
+  margin-top: 4px;
+  color: red;
 }

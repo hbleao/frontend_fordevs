@@ -15,6 +15,10 @@ export const Login = () => {
   const { isFetchingLogin, handleSubmitLogin, errorMessageLogin } = useLogin()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({
+    email: 'Campo obrigatório',
+    password: 'Campo obrigatório',
+  })
 
   function handleSubmit() {
     handleSubmitLogin({ email, password })
@@ -25,9 +29,27 @@ export const Login = () => {
       <Header title="4Dev - Enquentes para para programadores" />
       <form className={S.form} onSubmit={handleSubmit}>
         <h2>Ajude a comunidade com seu conhecimento</h2>
-        <Input type="email" placeholder="digite seu email" />
-        <Input type="password" placeholder="digite sua senha" />
-        <Button type="submit">Logar</Button>
+        <Input
+          type="email"
+          name="email"
+          placeholder="digite seu email"
+          data-testid="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          errorMessage={fieldErrors.email}
+        />
+        <Input
+          type="password"
+          name="password"
+          placeholder="digite sua senha"
+          data-testid="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          errorMessage={fieldErrors.password}
+        />
+        <Button type="submit" data-testid="loginButton" disabled>
+          Logar
+        </Button>
         <span className={S.createAccount}>Criar conta</span>
         <FormStatus
           errorMessage={errorMessageLogin}
