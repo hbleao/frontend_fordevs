@@ -65,21 +65,5 @@ button {
         text-decoration: underline;
       }
     }
-
-    .loaderWrapper {
-      margin-top: 24px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .errorWrapper {
-      margin-top: 24px;
-      display: flex;
-      justify-content: center;
-
-      .error {
-        color: red;
-      }
-    }
   }
 }

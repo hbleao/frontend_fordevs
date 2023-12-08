@@ -1,7 +1,13 @@
 import React from 'react'
 
 import S from './styles.scss'
-import { Footer, Header, Input, Loader } from '@/presentation/components'
+import {
+  Footer,
+  FormStatus,
+  Header,
+  Input,
+  Loader,
+} from '@/presentation/components'
 
 export const Login = () => {
   return (
@@ -15,16 +21,7 @@ export const Login = () => {
           Logar
         </button>
         <span className={S.createAccount}>Criar conta</span>
-        {true && (
-          <div className={S.loaderWrapper}>
-            <Loader />
-          </div>
-        )}
-        {true && (
-          <div className={S.errorWrapper}>
-            <span className={S.error}>Error</span>
-          </div>
-        )}
+        <FormStatus errorMessage="error" isLoading={false} />
       </form>
       <Footer />
     </div>

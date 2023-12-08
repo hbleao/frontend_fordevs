@@ -1,0 +1,16 @@
+
+.errorWrapper {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+
+  .error {
+    color: red;
+  }
+}
+
+.loaderWrapper {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
