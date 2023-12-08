@@ -5,31 +5,11 @@ body {
   background-color: $background;
 }
 
-button {
-  background-color: $primary;
-  color: $white;
-  border-radius: 8px;
-  font-size: 16px;
-  border: none;
-  padding: 16px;
-  cursor: pointer;
-
-  &:focus {
-    outline-color: $primaryLight;
-  }
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
-
 .login {
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-
 
   .form {
     width: 400px;
@@ -50,7 +30,7 @@ button {
       margin-bottom: 16px;
     }
 
-    .button {
+    button {
       margin-top: 32px;
     }
 

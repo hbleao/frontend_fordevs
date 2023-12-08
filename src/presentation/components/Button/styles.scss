@@ -1,0 +1,19 @@
+@import "../../styles/colors.scss";
+
+.button {
+  background-color: $primary;
+  color: $white;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  padding: 16px;
+  cursor: pointer;
+
+  &:focus {
+    outline-color: $primaryLight;
+  }
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
