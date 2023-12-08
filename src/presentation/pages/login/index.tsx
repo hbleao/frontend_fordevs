@@ -32,7 +32,6 @@ export const Login = () => {
           </div>
         )}
       </form>
-      <footer className={S.footer}>footer</footer>
     </div>
   )
 }
