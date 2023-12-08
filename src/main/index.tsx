@@ -1,8 +1,8 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 
-import { Login } from '@/presentation/pages'
+import { Routes } from '@/presentation/router'
 
 const root = createRoot(document.getElementById('__main'))
 
-root.render(<Login />)
+root.render(<Routes />)
