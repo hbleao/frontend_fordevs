@@ -1,16 +1,17 @@
-import path from 'node:path'
-import CleanWebpackPlugin from 'clean-webpack-plugin'
+/* eslint-disable @typescript-eslint/no-var-requires */
+const path = require('path')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
   mode: 'development',
-  entry: './src/main/index.tsx',
+  entry: path.resolve(__dirname, 'src/main/index.tsx'),
   output: {
     path: path.resolve(__dirname, 'public/js'),
-    publicPath: '/public/js',
+    publicPath: 'public/js',
     filename: 'bundle.js',
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', 'tsx', 'scss'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
     },
@@ -18,9 +19,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts(x?)$/,
+        test: /\.(ts|tsx)$/,
         loader: 'ts-loader',
-        exclude: /node_modules/,
+        options: {
+          transpileOnly: true,
+        },
       },
       {
         test: /\.scss$/,
@@ -31,7 +34,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              module: true,
+              modules: true,
             },
           },
           {
@@ -44,13 +47,21 @@ module.exports = {
   devServer: {
     port: 3000,
     open: false,
-    contentBase: '/public',
-    writeToDisk: true,
     historyApiFallback: true,
-  },
-  externals: {
-    react: 'React',
-    'react-dom': 'ReactDom',
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
+    compress: true,
+    client: {
+      logging: 'info',
+      progress: true,
+    },
+    devMiddleware: {
+      index: true,
+      mimeTypes: { phtml: 'text/html' },
+      publicPath: '/public',
+      writeToDisk: true,
+    },
   },
   plugins: [new CleanWebpackPlugin()],
 }

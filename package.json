@@ -28,7 +28,7 @@
     "webpack-merge": "^5.10.0"
   },
   "scripts": {
-    "dev": "webpack-dev-server",
+    "dev": "npx webpack serve",
     "prepare": "husky install",
     "lint": "npx eslint './src'",
     "lint:fix": "npx eslint ./src/** --fix",
