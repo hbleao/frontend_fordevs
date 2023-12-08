@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 import S from './styles.scss'
 
 import { HeaderProps } from './types'
 
-export const Header = ({ title }: HeaderProps) => {
+const Component = ({ title }: HeaderProps) => {
   return (
     <header className={S.header}>
       <img
@@ -15,3 +15,5 @@ export const Header = ({ title }: HeaderProps) => {
     </header>
   )
 }
+
+export const Header = memo(Component)

@@ -1,0 +1,28 @@
+@import "../../styles/colors.scss";
+
+input {
+  border: 1px solid $primaryLight;
+  line-height: 48px;
+  border-radius: 4px;
+  padding: 0 30px 0px 8px;
+
+  &:focus {
+    outline-color: $primaryLight;
+  }
+}
+
+.inputWrapper {
+  margin-top: 16px;
+  position: relative;
+
+  input {
+    width: 100%;
+  }
+
+  .status {
+    position: absolute;
+    top: 12px;
+    right: 8px;
+    cursor: help;
+  }
+}
