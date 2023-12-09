@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { faker } from '@faker-js/faker'
 
@@ -9,6 +9,10 @@ import { ValidationSpy } from '@/presentation/test'
 
 const makeSut = () => {
   const validationSpy = new ValidationSpy()
+  const fakeErrorMessage = faker.lorem.words()
+
+  validationSpy.errorMessage = fakeErrorMessage
+
   const sut = render(<Login validation={validationSpy} />)
 
   return {
@@ -18,19 +22,21 @@ const makeSut = () => {
 }
 
 describe('Login', () => {
-  it('should start with initial state', () => {
-    makeSut()
+  it('should start with initial state', async () => {
+    const { validationSpy } = makeSut()
     const spinner = screen.queryByTestId('spinner')
     expect(spinner).not.toBeInTheDocument()
 
     const button = screen.getByTestId('loginButton') as HTMLButtonElement
     expect(button.disabled).toBe(true)
 
-    const email = screen.getByTestId('email-error')
-    expect(email.textContent).toBe('Campo obrigatório')
+    waitFor(() => {
+      const email = screen.getByTestId('email-error')
+      expect(email.textContent).toBe(validationSpy.errorMessage)
 
-    const password = screen.getByTestId('password-error')
-    expect(password.textContent).toBe('Campo obrigatório')
+      const password = screen.getByTestId('password-error')
+      expect(password.textContent).toBe(validationSpy.errorMessage)
+    })
   })
 
   it('should call validation with correct email value', () => {
@@ -53,5 +59,20 @@ describe('Login', () => {
 
     expect(validationSpy.fieldName).toBe('password')
     expect(validationSpy.fieldValue).toBe(fakePassword)
+  })
+
+  it('should show email error if validation fails', () => {
+    const { validationSpy } = makeSut()
+    const email = screen.getByTestId('email')
+    const fakeEmail = faker.internet.email()
+    const fakeErrorMessage = faker.lorem.words()
+    validationSpy.errorMessage = fakeErrorMessage
+
+    fireEvent.input(email, { target: { value: fakeEmail } })
+
+    waitFor(() => {
+      const errorMessage = screen.getByTestId('email-error')
+      expect(email.textContent).toBe(errorMessage)
+    })
   })
 })
