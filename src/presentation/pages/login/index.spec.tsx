@@ -5,19 +5,23 @@ import { faker } from '@faker-js/faker'
 
 import { Login } from '.'
 
-import { ValidationSpy } from '@/presentation/test'
+import { ValidationSpy, AuthenticationSpy } from '@/presentation/test'
 
 const makeSut = () => {
   const validationSpy = new ValidationSpy()
+  const authenticationSpy = new AuthenticationSpy()
   const fakeErrorMessage = faker.lorem.words()
 
   validationSpy.errorMessage = fakeErrorMessage
 
-  const sut = render(<Login validation={validationSpy} />)
+  const sut = render(
+    <Login validation={validationSpy} authentication={authenticationSpy} />,
+  )
 
   return {
     sut,
     validationSpy,
+    authenticationSpy,
   }
 }
 
@@ -153,6 +157,27 @@ describe('Login', () => {
     waitFor(() => {
       const loader = screen.getByTestId('loader')
       expect(loader).toBeInTheDocument()
+    })
+  })
+
+  it('should call Authentication with correct values', () => {
+    const { validationSpy, authenticationSpy } = makeSut()
+    const email = screen.getByTestId('email')
+    const password = screen.getByTestId('password')
+    const submitButton = screen.getByTestId('loginButton')
+    const fakeEmail = faker.internet.email()
+    const fakePassword = faker.internet.password()
+    validationSpy.errorMessage = null
+
+    fireEvent.input(email, { target: { value: fakeEmail } })
+    fireEvent.input(password, { target: { value: fakePassword } })
+    fireEvent.click(submitButton)
+
+    waitFor(() => {
+      expect(authenticationSpy.params).toEqual({
+        fakeEmail,
+        fakePassword,
+      })
     })
   })
 })
