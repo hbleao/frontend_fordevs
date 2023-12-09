@@ -18,8 +18,8 @@ export const Login = ({ validation }: LoginProps) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fieldErrors, setFieldErrors] = useState({
-    email: 'Campo obrigatório',
-    password: 'Campo obrigatório',
+    email: '',
+    password: '',
   })
 
   function handleSubmit() {
@@ -28,10 +28,18 @@ export const Login = ({ validation }: LoginProps) => {
 
   useEffect(() => {
     validation.validate('email', email)
+    setFieldErrors({
+      ...fieldErrors,
+      email: validation.validate('email', email),
+    })
   }, [email])
 
   useEffect(() => {
     validation.validate('password', password)
+    setFieldErrors({
+      ...fieldErrors,
+      email: validation.validate('password', password),
+    })
   }, [password])
 
   return (

@@ -1,7 +1,7 @@
 import { Validation } from '../protocols'
 
 export class ValidationSpy implements Validation {
-  private errorMessage: string
+  public errorMessage: string
   public fieldName: string
   public fieldValue: string
 
