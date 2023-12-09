@@ -75,4 +75,19 @@ describe('Login', () => {
       expect(email.textContent).toBe(errorMessage)
     })
   })
+
+  it('should show password error if validation fails', () => {
+    const { validationSpy } = makeSut()
+    const password = screen.getByTestId('password')
+    const fakePassword = faker.internet.password()
+    const fakeErrorMessage = faker.lorem.words()
+    validationSpy.errorMessage = fakeErrorMessage
+
+    fireEvent.input(password, { target: { value: fakePassword } })
+
+    waitFor(() => {
+      const errorMessage = screen.getByTestId('password-error')
+      expect(password.textContent).toBe(errorMessage)
+    })
+  })
 })
