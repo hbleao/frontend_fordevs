@@ -1,0 +1,13 @@
+import { AccountModel } from '@/domain/models'
+import { mockAccount } from '@/domain/test'
+import { Authentication, AuthenticationParams } from '@/domain/useCases'
+
+export class AuthenticationSpy implements Authentication {
+  account = mockAccount()
+  params: AuthenticationParams
+
+  auth(params: AuthenticationParams): Promise<AccountModel> {
+    this.params = params
+    return Promise.resolve(this.account)
+  }
+}

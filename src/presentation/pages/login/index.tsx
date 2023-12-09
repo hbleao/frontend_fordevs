@@ -13,7 +13,7 @@ import { useLogin } from '@/presentation/hooks'
 
 import { LoginProps } from './types'
 
-export const Login = ({ validation }: LoginProps) => {
+export const Login = ({ validation, authentication }: LoginProps) => {
   const { isFetchingLogin, handleSubmitLogin, errorMessageLogin } = useLogin()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -22,8 +22,14 @@ export const Login = ({ validation }: LoginProps) => {
     password: '',
   })
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault()
+
+    await authentication.auth({
+      email,
+      password,
+    })
+
     handleSubmitLogin({ email, password })
   }
 
