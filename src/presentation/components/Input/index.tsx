@@ -8,7 +8,7 @@ export const Input = ({ errorMessage, ...props }: InputProps) => {
   return (
     <>
       <div className={S.inputWrapper}>
-        <input {...props} />
+        <input data-testid={props.name} {...props} />
       </div>
       {!!errorMessage && (
         <span className={S.errorMessage} data-testid={`${props.name}-error`}>

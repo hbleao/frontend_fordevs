@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import S from './styles.scss'
 import {
@@ -11,7 +11,9 @@ import {
 
 import { useLogin } from '@/presentation/hooks'
 
-export const Login = () => {
+import { LoginProps } from './types'
+
+export const Login = ({ validation }: LoginProps) => {
   const { isFetchingLogin, handleSubmitLogin, errorMessageLogin } = useLogin()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -24,6 +26,14 @@ export const Login = () => {
     handleSubmitLogin({ email, password })
   }
 
+  useEffect(() => {
+    validation.validate({ email })
+  }, [email])
+
+  useEffect(() => {
+    validation.validate({ password })
+  }, [password])
+
   return (
     <div className={S.login}>
       <Header title="4Dev - Enquentes para para programadores" />
@@ -33,7 +43,6 @@ export const Login = () => {
           type="email"
           name="email"
           placeholder="digite seu email"
-          data-testid="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           errorMessage={fieldErrors.email}
@@ -42,7 +51,6 @@ export const Login = () => {
           type="password"
           name="password"
           placeholder="digite sua senha"
-          data-testid="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           errorMessage={fieldErrors.password}
