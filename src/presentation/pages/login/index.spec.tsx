@@ -119,4 +119,21 @@ describe('Login', () => {
       expect(errorMessage).not.toBeInTheDocument()
     })
   })
+
+  it('should enable submit if form is valid', () => {
+    const { validationSpy } = makeSut()
+    const email = screen.getByTestId('email')
+    const password = screen.getByTestId('password')
+    const submitButton = screen.getByTestId('loginButton') as HTMLButtonElement
+    const fakeEmail = faker.internet.email()
+    const fakePassword = faker.internet.password()
+    validationSpy.errorMessage = null
+
+    fireEvent.input(email, { target: { value: fakeEmail } })
+    fireEvent.input(password, { target: { value: fakePassword } })
+
+    waitFor(() => {
+      expect(submitButton.disabled).toBe(false)
+    })
+  })
 })

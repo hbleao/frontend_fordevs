@@ -63,7 +63,11 @@ export const Login = ({ validation }: LoginProps) => {
           onChange={(e) => setPassword(e.target.value)}
           errorMessage={fieldErrors.password}
         />
-        <Button type="submit" data-testid="loginButton" disabled>
+        <Button
+          type="submit"
+          data-testid="loginButton"
+          disabled={!!fieldErrors.email || !!fieldErrors.password}
+        >
           Logar
         </Button>
         <span className={S.createAccount}>Criar conta</span>
