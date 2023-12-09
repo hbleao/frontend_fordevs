@@ -1,21 +1,11 @@
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import { faker } from '@faker-js/faker'
 
 import { Login } from '.'
-import { faker } from '@faker-js/faker'
-import { Validation } from '@/presentation/protocols'
-export class ValidationSpy implements Validation {
-  private errorMessage: string
-  public fieldName: string
-  public fieldValue: string
 
-  validate(fieldName: string, fieldValue: string): string {
-    this.fieldName = fieldName
-    this.fieldValue = fieldValue
-    return this.errorMessage
-  }
-}
+import { ValidationSpy } from '@/presentation/test'
 
 const makeSut = () => {
   const validationSpy = new ValidationSpy()
@@ -57,7 +47,6 @@ describe('Login', () => {
   it('should call validation with correct password value', () => {
     const { validationSpy } = makeSut()
     const password = screen.getByTestId('password')
-
     const fakePassword = faker.internet.password()
 
     fireEvent.input(password, { target: { value: fakePassword } })
