@@ -1,5 +1,11 @@
 import React from 'react'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import {
+  RenderResult,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { faker } from '@faker-js/faker'
 
@@ -7,12 +13,36 @@ import { Login } from '.'
 
 import { ValidationSpy, AuthenticationSpy } from '@/presentation/test'
 
-const makeSut = () => {
+const simulateValidSubmit = (
+  fakeEmail = faker.internet.email(),
+  fakePassword = faker.internet.password(),
+) => {
+  const email = screen.getByTestId('email')
+  const password = screen.getByTestId('password')
+  const submitButton = screen.getByTestId('loginButton')
+
+  fireEvent.input(email, { target: { value: fakeEmail } })
+  fireEvent.input(password, { target: { value: fakePassword } })
+  fireEvent.click(submitButton)
+}
+
+const populateField = (name: string, value: string) => {
+  const field = screen.getByTestId(name)
+  fireEvent.input(field, { target: { value } })
+
+  return { field }
+}
+
+type MakeSutProps = {
+  validationSpyError?: boolean
+}
+
+const makeSut = ({ validationSpyError = false }: MakeSutProps) => {
   const validationSpy = new ValidationSpy()
   const authenticationSpy = new AuthenticationSpy()
   const fakeErrorMessage = faker.lorem.words()
 
-  validationSpy.errorMessage = fakeErrorMessage
+  validationSpy.errorMessage = validationSpyError ? fakeErrorMessage : null
 
   const sut = render(
     <Login validation={validationSpy} authentication={authenticationSpy} />,
@@ -27,7 +57,7 @@ const makeSut = () => {
 
 describe('Login', () => {
   it('should start with initial state', async () => {
-    const { validationSpy } = makeSut()
+    const { validationSpy } = makeSut({ validationSpyError: true })
     const spinner = screen.queryByTestId('spinner')
     expect(spinner).not.toBeInTheDocument()
 
@@ -44,49 +74,40 @@ describe('Login', () => {
   })
 
   it('should call validation with correct email value', () => {
-    const { validationSpy } = makeSut()
-    const email = screen.getByTestId('email')
+    const { validationSpy } = makeSut({ validationSpyError: true })
     const fakeEmail = faker.internet.email()
 
-    fireEvent.input(email, { target: { value: fakeEmail } })
+    populateField('email', fakeEmail)
 
     expect(validationSpy.fieldName).toBe('email')
     expect(validationSpy.fieldValue).toBe(fakeEmail)
   })
 
   it('should call validation with correct password value', () => {
-    const { validationSpy } = makeSut()
-    const password = screen.getByTestId('password')
+    const { validationSpy } = makeSut({ validationSpyError: true })
     const fakePassword = faker.internet.password()
 
-    fireEvent.input(password, { target: { value: fakePassword } })
+    populateField('password', fakePassword)
 
     expect(validationSpy.fieldName).toBe('password')
     expect(validationSpy.fieldValue).toBe(fakePassword)
   })
 
   it('should show email error if validation fails', () => {
-    const { validationSpy } = makeSut()
-    const email = screen.getByTestId('email')
+    makeSut({ validationSpyError: true })
     const fakeEmail = faker.internet.email()
-    const fakeErrorMessage = faker.lorem.words()
-    validationSpy.errorMessage = fakeErrorMessage
 
-    fireEvent.input(email, { target: { value: fakeEmail } })
+    const { field } = populateField('email', fakeEmail)
 
     waitFor(() => {
       const errorMessage = screen.getByTestId('email-error')
-      expect(email.textContent).toBe(errorMessage)
+      expect(field.textContent).toBe(errorMessage)
     })
   })
 
   it('should show valid email state if Validation success', () => {
-    const { validationSpy } = makeSut()
-    const email = screen.getByTestId('email')
-    const fakeEmail = faker.internet.email()
-    validationSpy.errorMessage = ''
-
-    fireEvent.input(email, { target: { value: fakeEmail } })
+    makeSut({})
+    populateField('email', faker.internet.email())
 
     waitFor(() => {
       const errorMessage = screen.queryByTestId('email-error')
@@ -95,28 +116,19 @@ describe('Login', () => {
   })
 
   it('should show password error if validation fails', () => {
-    const { validationSpy } = makeSut()
-    const password = screen.getByTestId('password')
-    const fakePassword = faker.internet.password()
-    const fakeErrorMessage = faker.lorem.words()
-    validationSpy.errorMessage = fakeErrorMessage
+    makeSut({ validationSpyError: true })
 
-    fireEvent.input(password, { target: { value: fakePassword } })
+    const { field } = populateField('password', faker.internet.password())
 
     waitFor(() => {
       const errorMessage = screen.getByTestId('password-error')
-      expect(password.textContent).toBe(errorMessage)
+      expect(field.textContent).toBe(errorMessage)
     })
   })
 
   it('should show valid password state if Validation success', () => {
-    const { validationSpy } = makeSut()
-    const password = screen.getByTestId('password')
-    const fakePassword = faker.internet.password()
-    const fakeErrorMessage = faker.lorem.words()
-    validationSpy.errorMessage = fakeErrorMessage
-
-    fireEvent.input(password, { target: { value: fakePassword } })
+    makeSut({ validationSpyError: true })
+    populateField('password', faker.internet.password())
 
     waitFor(() => {
       const errorMessage = screen.queryByTestId('password-error')
@@ -125,16 +137,10 @@ describe('Login', () => {
   })
 
   it('should enable submit if form is valid', () => {
-    const { validationSpy } = makeSut()
-    const email = screen.getByTestId('email')
-    const password = screen.getByTestId('password')
+    makeSut({})
+    populateField('email', faker.internet.email())
+    populateField('password', faker.internet.password())
     const submitButton = screen.getByTestId('loginButton') as HTMLButtonElement
-    const fakeEmail = faker.internet.email()
-    const fakePassword = faker.internet.password()
-    validationSpy.errorMessage = null
-
-    fireEvent.input(email, { target: { value: fakeEmail } })
-    fireEvent.input(password, { target: { value: fakePassword } })
 
     waitFor(() => {
       expect(submitButton.disabled).toBe(false)
@@ -142,17 +148,8 @@ describe('Login', () => {
   })
 
   it('should enable submit if form is valid', () => {
-    const { validationSpy } = makeSut()
-    const email = screen.getByTestId('email')
-    const password = screen.getByTestId('password')
-    const submitButton = screen.getByTestId('loginButton')
-    const fakeEmail = faker.internet.email()
-    const fakePassword = faker.internet.password()
-    validationSpy.errorMessage = null
-
-    fireEvent.input(email, { target: { value: fakeEmail } })
-    fireEvent.input(password, { target: { value: fakePassword } })
-    fireEvent.click(submitButton)
+    makeSut({})
+    simulateValidSubmit()
 
     waitFor(() => {
       const loader = screen.getByTestId('loader')
@@ -161,17 +158,10 @@ describe('Login', () => {
   })
 
   it('should call Authentication with correct values', () => {
-    const { validationSpy, authenticationSpy } = makeSut()
-    const email = screen.getByTestId('email')
-    const password = screen.getByTestId('password')
-    const submitButton = screen.getByTestId('loginButton')
+    const { authenticationSpy } = makeSut({})
     const fakeEmail = faker.internet.email()
     const fakePassword = faker.internet.password()
-    validationSpy.errorMessage = null
-
-    fireEvent.input(email, { target: { value: fakeEmail } })
-    fireEvent.input(password, { target: { value: fakePassword } })
-    fireEvent.click(submitButton)
+    simulateValidSubmit(fakeEmail, fakePassword)
 
     waitFor(() => {
       expect(authenticationSpy.params).toEqual({
