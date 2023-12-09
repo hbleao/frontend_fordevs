@@ -10,7 +10,7 @@ export const FormStatus = ({ isLoading, errorMessage }: FormStatusProps) => {
   return (
     <>
       {isLoading && (
-        <div className={S.loaderWrapper} data-testid="spinner">
+        <div className={S.loaderWrapper} data-testid="loader">
           <Loader />
         </div>
       )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 
 import S from './styles.scss'
 import {
@@ -22,7 +22,8 @@ export const Login = ({ validation }: LoginProps) => {
     password: '',
   })
 
-  function handleSubmit() {
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault()
     handleSubmitLogin({ email, password })
   }
 
