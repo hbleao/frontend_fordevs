@@ -7,18 +7,20 @@ export type Params = {
 
 export const useLogin = () => {
   const [isFetchingLogin, setIsFetchingLogin] = useState(false)
-  const [loginData, setIsLoginData] = useState(false)
+  const [login, setLogin] = useState({})
   const [errorMessageLogin, setErrorMessageLogin] = useState('')
 
   function handleSubmitLogin({ email, password }: Params) {
     try {
       setIsFetchingLogin(true)
 
-      setTimeout(() => {
-        console.log('chamando api...')
-      }, 2000)
+      // setTimeout(() => {
+      //   console.log('chamando api...')
+      // }, 2000)
 
-      console.log(email, password)
+      setLogin({
+        data: [] as any,
+      })
     } catch (error: any) {
       console.error(error)
       setErrorMessageLogin(error.message)
@@ -29,7 +31,7 @@ export const useLogin = () => {
 
   return {
     isFetchingLogin,
-    loginData,
+    login,
     errorMessageLogin,
     handleSubmitLogin,
   }

@@ -1,6 +1,8 @@
 import React, { FormEvent, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 import S from './styles.scss'
+
 import {
   Button,
   Footer,
@@ -9,28 +11,38 @@ import {
   Input,
 } from '@/presentation/components'
 
-import { useLogin } from '@/presentation/hooks'
-
 import { LoginProps } from './types'
 
 export const Login = ({ validation, authentication }: LoginProps) => {
-  const { isFetchingLogin, handleSubmitLogin, errorMessageLogin } = useLogin()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [messageLoginServiceError, setMessageLoginServiceError] = useState('')
   const [fieldErrors, setFieldErrors] = useState({
     email: '',
     password: '',
   })
+  const navigate = useNavigate()
 
   async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
+    try {
+      e.preventDefault()
+      setIsLoading(true)
 
-    await authentication.auth({
-      email,
-      password,
-    })
+      if (isLoading) return
 
-    handleSubmitLogin({ email, password })
+      const account = await authentication.auth({
+        email,
+        password,
+      })
+
+      localStorage.setItem('accessToken', account.accessToken)
+      navigate('/')
+    } catch (error) {
+      setMessageLoginServiceError(error.message)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -77,10 +89,16 @@ export const Login = ({ validation, authentication }: LoginProps) => {
         >
           Logar
         </Button>
-        <span className={S.createAccount}>Criar conta</span>
+        <Link
+          to="/signup"
+          className={S.createAccount}
+          data-testid="signup-button"
+        >
+          Criar conta
+        </Link>
         <FormStatus
-          errorMessage={errorMessageLogin}
-          isLoading={isFetchingLogin}
+          errorMessage={messageLoginServiceError}
+          isLoading={isLoading}
         />
       </form>
       <Footer />
