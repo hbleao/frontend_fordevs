@@ -1,2 +1,2 @@
-export * from './RequiredField/requiredFieldValidation'
-export * from './Email/emailValidation'
+export * from './requiredField/requiredFieldValidation'
+export * from './email/emailValidation'
