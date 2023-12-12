@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker'
-import { EmailValidation } from './emailValidation'
 import { InvalidFieldError } from '@/validation/errors'
+import { EmailValidation } from './emailValidation'
 
 export const makeSut = () => {
-  const sut = new EmailValidation()
+  const sut = new EmailValidation('any_value')
 
   return {
     sut,
