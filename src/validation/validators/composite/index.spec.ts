@@ -1,4 +1,4 @@
-import { FieldValidationSpy } from '../test/mockFieldValidation'
+import { FieldValidationSpy } from '../../test/mockFieldValidation'
 import { ValidationComposite } from '.'
 
 const makeSut = (fieldName: string) => {
