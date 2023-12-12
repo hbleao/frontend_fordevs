@@ -57,7 +57,7 @@ export const Login = ({ validation, authentication }: LoginProps) => {
     validation.validate('password', password)
     setFieldErrors({
       ...fieldErrors,
-      email: validation.validate('password', password),
+      password: validation.validate('password', password),
     })
   }, [password])
 
@@ -69,7 +69,7 @@ export const Login = ({ validation, authentication }: LoginProps) => {
         <Input
           type="email"
           name="email"
-          placeholder="digite seu email"
+          placeholder="Digite seu email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           errorMessage={fieldErrors.email}
@@ -77,7 +77,7 @@ export const Login = ({ validation, authentication }: LoginProps) => {
         <Input
           type="password"
           name="password"
-          placeholder="digite sua senha"
+          placeholder="Digite sua senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           errorMessage={fieldErrors.password}
