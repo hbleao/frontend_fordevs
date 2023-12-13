@@ -3,7 +3,17 @@ module.exports = {
   roots: ['<rootDir>/src'],
   preset: 'ts-jest',
   testEnvironment: 'jest-environment-jsdom',
-  collectCoverageFrom: ['<rootDir>/src/**/*.{ts,tsx}', '!**/*.d.ts'],
+  collectCoverageFrom: [
+    '<rootDir>/src/**/*.{ts,tsx}',
+    '!**/*.d.ts',
+    '!<rootDir>/src/main/**/*',
+    '!<rootDir>/src/domain/models/index.ts',
+    '!<rootDir>/src/domain/useCases/index.ts',
+    '!<rootDir>/src/presentation/protocols/index.ts',
+    '!<rootDir>/src/presentation/router/index.ts',
+    '!<rootDir>/src/validations/validators/index.ts',
+    '!<rootDir>/src/validation/protocols/index.ts',
+  ],
   transform: {
     '.+\\.ts$': 'ts-jest',
   },
