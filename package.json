@@ -13,8 +13,9 @@
     "lint": "npx eslint './src'",
     "lint:fix": "npx eslint ./src/** --fix",
     "test": "npx jest --no-cache --runInBand",
-    "test:watch": "npx jest --watchAll",
-    "test:coverage": "npx jest --coverage",
+    "test:watch": "npm run test -- --watchAll",
+    "test:staged": "npm run test -- --findRelatedTests",
+    "test:ci": "npm run test -- --coverage",
     "check": "npx npm-check -u -s"
   },
   "dependencies": {
