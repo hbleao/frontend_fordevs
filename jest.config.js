@@ -10,8 +10,9 @@ module.exports = {
     '!<rootDir>/src/domain/models/index.ts',
     '!<rootDir>/src/domain/useCases/index.ts',
     '!<rootDir>/src/presentation/protocols/index.ts',
-    '!<rootDir>/src/presentation/router/index.ts',
-    '!<rootDir>/src/validations/validators/index.ts',
+    '!<rootDir>/src/presentation/pages/index.ts',
+    '!<rootDir>/src/presentation/router/index.tsx',
+    '!<rootDir>/src/validation/validators/index.ts',
     '!<rootDir>/src/validation/protocols/index.ts',
   ],
   transform: {

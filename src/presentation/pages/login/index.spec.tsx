@@ -9,19 +9,6 @@ import { Login } from '.'
 import { ValidationSpy, AuthenticationSpy } from '@/presentation/test'
 import { BrowserRouter } from 'react-router-dom'
 
-const simulateValidSubmit = (
-  email = faker.internet.email(),
-  password = faker.internet.password(),
-) => {
-  const emailElement = screen.getByTestId('email')
-  const passwordElement = screen.getByTestId('password')
-  const submitButton = screen.getByTestId('loginButton')
-
-  fireEvent.input(emailElement, { target: { value: email } })
-  fireEvent.input(passwordElement, { target: { value: password } })
-  fireEvent.click(submitButton)
-}
-
 const populateField = (name: string, value: string) => {
   const field = screen.getByTestId(name)
   fireEvent.input(field, { target: { value } })
@@ -29,13 +16,28 @@ const populateField = (name: string, value: string) => {
   return { field }
 }
 
-type MakeSutProps = {
-  validationSpyError?: boolean
+const simulateValidSubmit = (
+  email = faker.internet.email(),
+  password = faker.internet.password(),
+) => {
+  const submitButton = screen.getByTestId('loginButton')
+
+  populateField('email', email)
+  populateField('password', password)
+  fireEvent.click(submitButton)
 }
 
-const makeSut = ({ validationSpyError = false }: MakeSutProps) => {
+type MakeSutProps = {
+  validationSpyError?: boolean
+  authenticationSpyError?: boolean
+}
+
+const makeSut = ({
+  validationSpyError = false,
+  authenticationSpyError = false,
+}: MakeSutProps) => {
   const validationSpy = new ValidationSpy()
-  const authenticationSpy = new AuthenticationSpy()
+  const authenticationSpy = new AuthenticationSpy(authenticationSpyError)
   const fakeErrorMessage = faker.lorem.words()
 
   validationSpy.errorMessage = validationSpyError ? fakeErrorMessage : null
@@ -149,14 +151,24 @@ describe('Login', () => {
     })
   })
 
-  it('should enable submit if form is valid', async () => {
-    makeSut({})
+  it('should enable submit if form is invalid', async () => {
+    makeSut({ authenticationSpyError: true })
+
     simulateValidSubmit()
 
-    await waitFor(() => {
-      // const loader = screen.queryByTestId('loader')
-      // expect(loader).toBeInTheDocument()
-    })
+    await screen.findByTestId('loader')
+
+    const authenticationError = await screen.findByTestId('error-message')
+    expect(authenticationError).toBeInTheDocument()
+  })
+
+  it('should calls submitApi only once', async () => {
+    const { authenticationSpy } = makeSut({})
+
+    simulateValidSubmit()
+    simulateValidSubmit()
+
+    expect(authenticationSpy.callsCount).toBe(1)
   })
 
   it('should call Authentication with correct values', () => {

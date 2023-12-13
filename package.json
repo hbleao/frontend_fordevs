@@ -7,6 +7,23 @@
     "email": "hbleao@gmail.com"
   },
   "version": "1.0.0",
+  "scripts": {
+    "dev": "npx webpack serve",
+    "prepare": "husky install",
+    "lint": "npx eslint './src'",
+    "lint:fix": "npx eslint ./src/** --fix",
+    "test": "npx jest --no-cache --runInBand",
+    "test:watch": "npx jest --watchAll",
+    "test:coverage": "npx jest --coverage",
+    "check": "npx npm-check -u -s"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "npm-check": "^6.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.1"
+  },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
     "@jest/globals": "^29.7.0",
@@ -15,9 +32,9 @@
     "@testing-library/react": "^14.1.2",
     "@testing-library/user-event": "^14.5.1",
     "@types/axios": "^0.14.0",
-    "@types/jest": "^29.5.10",
-    "@types/node": "^20.10.3",
-    "@types/react": "^18.2.42",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.4",
+    "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.17",
     "@types/react-router-dom": "^5.3.3",
     "clean-webpack-plugin": "^4.0.0",
@@ -34,25 +51,10 @@
     "style-loader": "^3.3.3",
     "ts-jest": "^29.1.1",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.3.2",
+    "typescript": "^5.3.3",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
     "webpack-merge": "^5.10.0"
-  },
-  "scripts": {
-    "dev": "npx webpack serve",
-    "prepare": "husky install",
-    "lint": "npx eslint './src'",
-    "lint:fix": "npx eslint ./src/** --fix",
-    "test": "npx jest --no-cache --runInBand",
-    "test:watch": "npx jest --watchAll",
-    "test:coverage": "npx jest --coverage"
-  },
-  "dependencies": {
-    "axios": "^1.6.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.1"
   }
 }
