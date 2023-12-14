@@ -2,11 +2,14 @@ import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { faker } from '@faker-js/faker'
-import 'jest-localstorage-mock'
 
 import { Login } from '.'
 
-import { ValidationSpy, AuthenticationSpy } from '@/presentation/test'
+import {
+  ValidationSpy,
+  AuthenticationSpy,
+  SaveAccessTokenMock,
+} from '@/presentation/test'
 import { BrowserRouter } from 'react-router-dom'
 
 const populateField = (name: string, value: string) => {
@@ -39,12 +42,18 @@ const makeSut = ({
   const validationSpy = new ValidationSpy()
   const authenticationSpy = new AuthenticationSpy(authenticationSpyError)
   const fakeErrorMessage = faker.lorem.words()
+  const saveAccessTokenMock = new SaveAccessTokenMock()
 
   validationSpy.errorMessage = validationSpyError ? fakeErrorMessage : null
 
   const sut = render(
     <BrowserRouter>
-      <Login validation={validationSpy} authentication={authenticationSpy} />,
+      <Login
+        validation={validationSpy}
+        authentication={authenticationSpy}
+        saveAccessToken={saveAccessTokenMock}
+      />
+      ,
     </BrowserRouter>,
   )
 
@@ -52,14 +61,11 @@ const makeSut = ({
     sut,
     validationSpy,
     authenticationSpy,
+    saveAccessTokenMock,
   }
 }
 
 describe('Login', () => {
-  beforeEach(() => {
-    localStorage.clear()
-  })
-
   it('should start with initial state', async () => {
     const { validationSpy } = makeSut({ validationSpyError: true })
     const spinner = screen.queryByTestId('spinner')
@@ -186,12 +192,13 @@ describe('Login', () => {
   })
 
   it('should add access token to localstorage on success', async () => {
-    const { authenticationSpy } = makeSut({ validationSpyError: null })
+    const { saveAccessTokenMock, authenticationSpy } = makeSut({
+      validationSpyError: false,
+    })
     simulateValidSubmit()
     await waitFor(() => screen.queryByTestId('loader'))
-    expect(localStorage.setItem).toHaveBeenCalledWith(
-      'accessToken',
-      authenticationSpy.account.accessToken,
+    expect(authenticationSpy.account.accessToken).toBe(
+      saveAccessTokenMock.accessToken,
     )
   })
 })
