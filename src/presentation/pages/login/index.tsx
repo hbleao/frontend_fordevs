@@ -13,7 +13,11 @@ import {
 
 import { LoginProps } from './types'
 
-export const Login = ({ validation, authentication }: LoginProps) => {
+export const Login = ({
+  validation,
+  authentication,
+  saveAccessToken,
+}: LoginProps) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -36,7 +40,7 @@ export const Login = ({ validation, authentication }: LoginProps) => {
         password,
       })
 
-      localStorage.setItem('accessToken', account.accessToken)
+      await saveAccessToken.save(account.accessToken)
       navigate('/')
     } catch (error) {
       setMessageLoginServiceError(error.message)
