@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import axios from 'axios'
 
-import { AxiosHttpAdapterClient } from './axiosHttpClient'
+import { AxiosHttpAdapterClient } from '.'
 
 import { HttpPostParams } from '@/data/protocols/http'
 import { mockAxios, mockHttpResponse } from '@/infra/test'

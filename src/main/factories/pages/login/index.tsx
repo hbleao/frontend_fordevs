@@ -1,10 +1,11 @@
 import React from 'react'
 
 import { Login } from '@/presentation/pages'
-import { RemoteAuthentication } from '@/data/useCases/authentication/remoteAuthentication'
-import { AxiosHttpAdapterClient } from '@/infra/http/axiosHttpClient/axiosHttpClient'
+import { RemoteAuthentication } from '@/data/useCases/authentication'
+import { AxiosHttpAdapterClient } from '@/infra/http/axiosHttpClient'
 import { ValidationBuilder, ValidationComposite } from '@/validation/validators'
 import { makeApiUrl } from '../../http'
+import { makeLocalAccessToken } from '../../http/localSaveAccessTokenFactory'
 
 export const MakeLogin = () => {
   const url = makeApiUrl('/login')
@@ -20,6 +21,7 @@ export const MakeLogin = () => {
     <Login
       authentication={remoteAuthentication}
       validation={validationComposite}
+      saveAccessToken={makeLocalAccessToken()}
     />
   )
 }
