@@ -69,6 +69,17 @@ describe('RemoteAddAccount', () => {
     expect(promise).rejects.toThrow(new UnexpectedError())
   })
 
+  it('should throw NotFound if HttpPostClient returns 404', async () => {
+    const { sut, httpPostClientSpy } = makeSut()
+
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.notFound,
+    }
+
+    const promise = sut.add(mockAddAccountParams())
+    expect(promise).rejects.toThrow(new UnexpectedError())
+  })
+
   it('should throw InternalServerError if HttpPostClient returns 500', async () => {
     const { sut, httpPostClientSpy } = makeSut()
 
