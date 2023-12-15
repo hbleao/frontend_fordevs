@@ -7,7 +7,7 @@ import { AccountModel } from '@/domain/models'
 import { HttpPostClientSpy } from '@/data/test'
 import { mockAddAccountParams } from '@/domain/test'
 import { HttpStatusCode } from '@/data/protocols'
-import { EmailInUseError } from '@/domain/errors'
+import { EmailInUseError, UnexpectedError } from '@/domain/errors'
 
 type SutTypes = {
   sut: RemoteAddAccount
@@ -56,5 +56,16 @@ describe('RemoteAddAccount', () => {
 
     const promise = sut.add(mockAddAccountParams())
     expect(promise).rejects.toThrow(new EmailInUseError())
+  })
+
+  it('should throw EmailInUserError if HttpPostClient returns 400', async () => {
+    const { sut, httpPostClientSpy } = makeSut()
+
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.badRequest,
+    }
+
+    const promise = sut.add(mockAddAccountParams())
+    expect(promise).rejects.toThrow(new UnexpectedError())
   })
 })
