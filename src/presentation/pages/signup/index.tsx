@@ -35,8 +35,9 @@ export const SignUp = ({ validation, addAccount }: SignUpProps) => {
   }
 
   async function handleSubmit(e: FormEvent) {
+    if (isSubmitLoading) return
+    e.preventDefault()
     try {
-      e.preventDefault()
       setIsSubmitLoading(true)
 
       await addAccount.add({
@@ -46,6 +47,7 @@ export const SignUp = ({ validation, addAccount }: SignUpProps) => {
         passwordConfirmation: field.passwordConfirmation,
       })
     } catch (error) {
+      setMessageLoginServiceError(error.message)
     } finally {
       setIsSubmitLoading(false)
     }
