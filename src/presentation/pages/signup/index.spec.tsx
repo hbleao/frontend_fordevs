@@ -7,6 +7,7 @@ import '@testing-library/jest-dom'
 import { SignUp } from '.'
 
 import { AddAccountSpy, ValidationSpy } from '@/presentation/test'
+import { EmailInUseError } from '@/domain/errors'
 
 type MakeSutProps = {
   validationSpyError?: boolean
@@ -45,6 +46,20 @@ const getFieldError = async (errorName: string) => {
     const ElementError = screen.queryByTestId(errorName)
     expect(ElementError).toBeInTheDocument()
   })
+}
+
+const simulateSubmitForm = () => {
+  const name = faker.person.firstName()
+  const email = faker.internet.email()
+  const password = faker.internet.password()
+
+  populateField('name', name)
+  populateField('email', email)
+  populateField('password', password)
+  populateField('passwordConfirmation', password)
+
+  const submitButton = screen.getByTestId('signupButton') as HTMLButtonElement
+  fireEvent.submit(submitButton)
 }
 
 describe('SignUp', () => {
@@ -178,7 +193,7 @@ describe('SignUp', () => {
     expect(loader).toBeInTheDocument()
   })
 
-  it('should call AddAccout with correct values', () => {
+  it('should call AddAccount with correct values', () => {
     const { addAccountSpy } = makeSut({})
     const name = faker.person.firstName()
     const email = faker.internet.email()
@@ -197,6 +212,31 @@ describe('SignUp', () => {
       email,
       password,
       passwordConfirmation: password,
+    })
+  })
+
+  it('should call AddAccount only once', async () => {
+    const { addAccountSpy } = makeSut({})
+
+    simulateSubmitForm()
+    simulateSubmitForm()
+    simulateSubmitForm()
+
+    waitFor(() => {
+      expect(addAccountSpy.callsCount).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  it('should call AddAccount only once', async () => {
+    const { addAccountSpy } = makeSut({})
+    const error = new EmailInUseError()
+
+    simulateSubmitForm()
+    jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error)
+
+    waitFor(() => {
+      const requestError = screen.queryByTestId('error-message')
+      expect(requestError).toBeInTheDocument()
     })
   })
 })
