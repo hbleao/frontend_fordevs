@@ -1,5 +1,5 @@
-import React, { FormEvent, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import S from './styles.scss'
 
@@ -10,63 +10,47 @@ import {
   Header,
   Input,
 } from '@/presentation/components'
-
-import { LoginProps } from './types'
+import { SignUpProps } from './types'
 import { isValidFields } from '@/presentation/helpers'
 
-export const Login = ({
-  validation,
-  authentication,
-  saveAccessToken,
-}: LoginProps) => {
+export const SignUp = ({ validation }: SignUpProps) => {
   const [field, setField] = useState({
+    name: '',
     email: '',
     password: '',
+    passwordConfirmation: '',
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false)
   const [messageLoginServiceError, setMessageLoginServiceError] = useState('')
   const [fieldErrors, setFieldErrors] = useState({
+    name: '',
     email: '',
     password: '',
+    passwordConfirmation: '',
   })
-  const navigate = useNavigate()
-
-  async function handleSubmit(e: FormEvent) {
-    try {
-      e.preventDefault()
-      setIsLoading(true)
-
-      if (isLoading) return
-
-      const account = await authentication.auth({
-        email: field.email,
-        password: field.password,
-      })
-
-      await saveAccessToken.save(account.accessToken)
-      navigate('/')
-    } catch (error) {
-      setMessageLoginServiceError(error.message)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   async function validateFieldErrors() {
     const errors = isValidFields(validation, field) as any
-
     setFieldErrors(errors)
   }
 
   useEffect(() => {
     validateFieldErrors()
-  }, [field.email, field.password])
+  }, [field.name, field.email, field.password, field.passwordConfirmation])
 
   return (
-    <div className={S.login}>
+    <div className={S.signup}>
       <Header title="4Dev - Enquentes para para programadores" />
-      <form className={S.form} onSubmit={handleSubmit}>
-        <h2>Ajude a comunidade com seu conhecimento</h2>
+      <form className={S.form}>
+        <h2>Crie sua conta</h2>
+        <Input
+          type="text"
+          name="name"
+          placeholder="Digite seu nome"
+          value={field.name}
+          onChange={(e) => setField({ ...field, name: e.target.value })}
+          errorMessage={fieldErrors.name}
+        />
         <Input
           type="email"
           name="email"
@@ -83,23 +67,29 @@ export const Login = ({
           onChange={(e) => setField({ ...field, password: e.target.value })}
           errorMessage={fieldErrors.password}
         />
-        <Button
-          type="submit"
-          data-testid="loginButton"
-          disabled={!!fieldErrors.email || !!fieldErrors.password}
-        >
-          Logar
+        <Input
+          type="password"
+          name="passwordConfirmation"
+          placeholder="Repita sua senha"
+          value={field.passwordConfirmation}
+          onChange={(e) =>
+            setField({ ...field, passwordConfirmation: e.target.value })
+          }
+          errorMessage={fieldErrors.passwordConfirmation}
+        />
+        <Button type="submit" data-testid="signup-button" disabled>
+          Criar conta
         </Button>
         <Link
-          to="/signup"
+          to="/login"
           className={S.createAccount}
-          data-testid="signup-button"
+          data-testid="login-button"
         >
-          Criar conta
+          Logar na plataforma
         </Link>
         <FormStatus
           errorMessage={messageLoginServiceError}
-          isLoading={isLoading}
+          isLoading={isSubmitLoading}
         />
       </form>
       <Footer />
