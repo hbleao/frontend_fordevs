@@ -1,29 +1,35 @@
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { SignUp } from '.'
 import { BrowserRouter } from 'react-router-dom'
-import { ValidationSpy } from '@/presentation/test'
 import { faker } from '@faker-js/faker'
+import '@testing-library/jest-dom'
+
+import { SignUp } from '.'
+
+import { AddAccountSpy, ValidationSpy } from '@/presentation/test'
 
 type MakeSutProps = {
   validationSpyError?: boolean
   authenticationSpyError?: boolean
+  addAccountSpy?: AddAccountSpy
 }
 
 const makeSut = ({ validationSpyError = false }: MakeSutProps) => {
   const validationSpy = new ValidationSpy()
   const fakeErrorMessage = faker.lorem.words()
   validationSpy.errorMessage = validationSpyError ? fakeErrorMessage : null
+  const addAccountSpy = new AddAccountSpy()
 
   const sut = render(
     <BrowserRouter>
-      <SignUp validation={validationSpy} />
+      <SignUp validation={validationSpy} addAccount={addAccountSpy} />
     </BrowserRouter>,
   )
 
   return {
     sut,
     validationSpy,
+    addAccountSpy,
   }
 }
 
@@ -34,9 +40,11 @@ const populateField = (name: string, value: string) => {
   return { field }
 }
 
-const getFieldError = (errorName: string) => {
-  const ElementError = screen.queryByTestId(errorName)
-  expect(ElementError).toBeInTheDocument()
+const getFieldError = async (errorName: string) => {
+  waitFor(() => {
+    const ElementError = screen.queryByTestId(errorName)
+    expect(ElementError).toBeInTheDocument()
+  })
 }
 
 describe('SignUp', () => {
@@ -49,15 +57,15 @@ describe('SignUp', () => {
     const errorMessage = screen.queryByTestId('error-message')
     expect(errorMessage).not.toBeInTheDocument()
 
-    waitFor(() => {
-      getFieldError('name-error')
-      getFieldError('email-error')
-      getFieldError('password-error')
-      getFieldError('passwordConfirmation-error')
-    })
+    getFieldError('name-error')
+    getFieldError('email-error')
+    getFieldError('password-error')
+    getFieldError('passwordConfirmation-error')
 
-    const button = screen.getByTestId('signup-button') as HTMLButtonElement
-    expect(button.disabled).toBe(true)
+    waitFor(() => {
+      const button = screen.getByTestId('signupButton') as HTMLButtonElement
+      expect(button.disabled).toBe(true)
+    })
   })
 
   it('should call validation with correct name value', () => {
@@ -137,6 +145,58 @@ describe('SignUp', () => {
     waitFor(() => {
       const errorMessage = screen.queryByTestId('passwordConfirmation-error')
       expect(errorMessage).not.toBeInTheDocument()
+    })
+  })
+
+  it('should enable submit if form is valid', () => {
+    makeSut({})
+    const password = faker.internet.password()
+    populateField('name', faker.person.firstName())
+    populateField('email', faker.internet.email())
+    populateField('password', password)
+    populateField('passwordConfirmation', password)
+    const submitButton = screen.getByTestId('signupButton') as HTMLButtonElement
+
+    waitFor(() => {
+      expect(submitButton.disabled).toBe(false)
+    })
+  })
+
+  it('should show loader on submit', async () => {
+    makeSut({})
+
+    populateField('name', faker.person.firstName())
+    populateField('email', faker.internet.email())
+    populateField('name', faker.internet.password())
+    populateField('name', faker.internet.password())
+
+    const submitButton = screen.getByTestId('signupButton') as HTMLButtonElement
+
+    fireEvent.submit(submitButton)
+
+    const loader = screen.queryByTestId('loader')
+    expect(loader).toBeInTheDocument()
+  })
+
+  it('should call AddAccout with correct values', () => {
+    const { addAccountSpy } = makeSut({})
+    const name = faker.person.firstName()
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+
+    populateField('name', name)
+    populateField('email', email)
+    populateField('password', password)
+    populateField('passwordConfirmation', password)
+
+    const submitButton = screen.getByTestId('signupButton') as HTMLButtonElement
+    fireEvent.submit(submitButton)
+
+    expect(addAccountSpy.params).toEqual({
+      name,
+      email,
+      password,
+      passwordConfirmation: password,
     })
   })
 })

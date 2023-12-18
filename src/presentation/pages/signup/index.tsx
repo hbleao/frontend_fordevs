@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import S from './styles.scss'
@@ -13,7 +13,7 @@ import {
 import { SignUpProps } from './types'
 import { isValidFields } from '@/presentation/helpers'
 
-export const SignUp = ({ validation }: SignUpProps) => {
+export const SignUp = ({ validation, addAccount }: SignUpProps) => {
   const [field, setField] = useState({
     name: '',
     email: '',
@@ -34,6 +34,23 @@ export const SignUp = ({ validation }: SignUpProps) => {
     setFieldErrors(errors)
   }
 
+  async function handleSubmit(e: FormEvent) {
+    try {
+      e.preventDefault()
+      setIsSubmitLoading(true)
+
+      await addAccount.add({
+        name: field.name,
+        email: field.email,
+        password: field.password,
+        passwordConfirmation: field.passwordConfirmation,
+      })
+    } catch (error) {
+    } finally {
+      setIsSubmitLoading(false)
+    }
+  }
+
   useEffect(() => {
     validateFieldErrors()
   }, [field.name, field.email, field.password, field.passwordConfirmation])
@@ -41,7 +58,7 @@ export const SignUp = ({ validation }: SignUpProps) => {
   return (
     <div className={S.signup}>
       <Header title="4Dev - Enquentes para para programadores" />
-      <form className={S.form}>
+      <form className={S.form} onSubmit={handleSubmit}>
         <h2>Crie sua conta</h2>
         <Input
           type="text"
@@ -77,7 +94,16 @@ export const SignUp = ({ validation }: SignUpProps) => {
           }
           errorMessage={fieldErrors.passwordConfirmation}
         />
-        <Button type="submit" data-testid="signup-button" disabled>
+        <Button
+          type="submit"
+          data-testid="signupButton"
+          disabled={
+            !!fieldErrors.name ||
+            !!fieldErrors.email ||
+            !!fieldErrors.password ||
+            !!fieldErrors.passwordConfirmation
+          }
+        >
           Criar conta
         </Button>
         <Link
