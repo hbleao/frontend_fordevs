@@ -99,4 +99,44 @@ describe('SignUp', () => {
     const name = screen.getByTestId('passwordConfirmation-error')
     expect(name.textContent).toBe(validationSpy.errorMessage)
   })
+
+  it('should show valid name state if Validation success', () => {
+    makeSut({})
+    populateField('name', faker.person.firstName())
+
+    waitFor(() => {
+      const errorMessage = screen.queryByTestId('name-error')
+      expect(errorMessage).not.toBeInTheDocument()
+    })
+  })
+
+  it('should show valid email state if Validation success', () => {
+    makeSut({})
+    populateField('email', faker.internet.email())
+
+    waitFor(() => {
+      const errorMessage = screen.queryByTestId('email-error')
+      expect(errorMessage).not.toBeInTheDocument()
+    })
+  })
+
+  it('should show valid password state if Validation success', () => {
+    makeSut({})
+    populateField('password', faker.internet.password())
+
+    waitFor(() => {
+      const errorMessage = screen.queryByTestId('password-error')
+      expect(errorMessage).not.toBeInTheDocument()
+    })
+  })
+
+  it('should show valid passwordConfirmation state if Validation success', () => {
+    makeSut({})
+    populateField('passwordConfirmation', faker.internet.password())
+
+    waitFor(() => {
+      const errorMessage = screen.queryByTestId('passwordConfirmation-error')
+      expect(errorMessage).not.toBeInTheDocument()
+    })
+  })
 })
