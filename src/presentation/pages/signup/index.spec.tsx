@@ -6,13 +6,18 @@ import '@testing-library/jest-dom'
 
 import { SignUp } from '.'
 
-import { AddAccountSpy, ValidationSpy } from '@/presentation/test'
+import {
+  AddAccountSpy,
+  SaveAccessTokenMock,
+  ValidationSpy,
+} from '@/presentation/test'
 import { EmailInUseError } from '@/domain/errors'
 
 type MakeSutProps = {
   validationSpyError?: boolean
   authenticationSpyError?: boolean
   addAccountSpy?: AddAccountSpy
+  saveAccessTokenMock?: SaveAccessTokenMock
 }
 
 const makeSut = ({ validationSpyError = false }: MakeSutProps) => {
@@ -20,10 +25,15 @@ const makeSut = ({ validationSpyError = false }: MakeSutProps) => {
   const fakeErrorMessage = faker.lorem.words()
   validationSpy.errorMessage = validationSpyError ? fakeErrorMessage : null
   const addAccountSpy = new AddAccountSpy()
+  const saveAccessTokenMock = new SaveAccessTokenMock()
 
   const sut = render(
     <BrowserRouter>
-      <SignUp validation={validationSpy} addAccount={addAccountSpy} />
+      <SignUp
+        validation={validationSpy}
+        addAccount={addAccountSpy}
+        saveAccessToken={saveAccessTokenMock}
+      />
     </BrowserRouter>,
   )
 
@@ -31,6 +41,7 @@ const makeSut = ({ validationSpyError = false }: MakeSutProps) => {
     sut,
     validationSpy,
     addAccountSpy,
+    saveAccessTokenMock,
   }
 }
 
@@ -227,7 +238,7 @@ describe('SignUp', () => {
     })
   })
 
-  it('should call AddAccount only once', async () => {
+  it('should present error if AddAccount fails', async () => {
     const { addAccountSpy } = makeSut({})
     const error = new EmailInUseError()
 
@@ -237,6 +248,18 @@ describe('SignUp', () => {
     waitFor(() => {
       const requestError = screen.queryByTestId('error-message')
       expect(requestError).toBeInTheDocument()
+    })
+  })
+
+  it('should call SaveAccessToken on success', async () => {
+    const { addAccountSpy, saveAccessTokenMock } = makeSut({})
+
+    simulateSubmitForm()
+
+    waitFor(() => {
+      expect(saveAccessTokenMock.accessToken).toBe(
+        addAccountSpy.account.accessToken,
+      )
     })
   })
 })

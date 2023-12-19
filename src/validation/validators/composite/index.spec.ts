@@ -1,5 +1,7 @@
-import { FieldValidationSpy } from '../../test/mockFieldValidation'
+import { faker } from '@faker-js/faker'
 import { ValidationComposite } from '.'
+
+import { FieldValidationSpy } from '../../test/mockFieldValidation'
 
 const makeSut = (fieldName: string) => {
   const validationSpy = new FieldValidationSpy(fieldName)
@@ -18,8 +20,9 @@ const makeSut = (fieldName: string) => {
 
 describe('ValidationComposite', () => {
   it('should return error if any validation fails', () => {
-    const { sut } = makeSut('any_field')
-    const error = sut.validate('any_field', 'any_value')
+    const field = faker.database.column()
+    const { sut } = makeSut(field)
+    const error = sut.validate(field, { [field]: faker.internet.email() })
     expect(error).toBe('any_massage')
   })
 })

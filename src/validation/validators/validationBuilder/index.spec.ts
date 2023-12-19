@@ -1,7 +1,12 @@
-import { ValidationBuilder } from '.'
-import { EmailValidation } from '../email/emailValidation'
-import { MinLengthValidation } from '../minLength'
-import { RequiredFieldValidation } from '../requiredField'
+import { faker } from '@faker-js/faker'
+
+import {
+  CompareFieldsValidation,
+  EmailValidation,
+  MinLengthValidation,
+  RequiredFieldValidation,
+  ValidationBuilder,
+} from '..'
 
 describe('ValidationBuilder', () => {
   it('should return RequiredFieldValidation', () => {
@@ -19,6 +24,14 @@ describe('ValidationBuilder', () => {
       .minLength(5)
       .build()
     expect(validations).toEqual([new MinLengthValidation('any_field', 5)])
+  })
+
+  it('should return CompareFieldsValidation', () => {
+    const field = faker.database.column()
+    const field2 = faker.database.column()
+
+    const validations = ValidationBuilder.field(field).sameAs(field2).build()
+    expect(validations).toEqual([new CompareFieldsValidation(field, field2)])
   })
 
   it('should return a list of validations', () => {

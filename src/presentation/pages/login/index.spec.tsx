@@ -91,7 +91,7 @@ describe('Login', () => {
 
     waitFor(() => {
       expect(validationSpy.fieldName).toBe('email')
-      expect(validationSpy.fieldValue).toBe(fakeEmail)
+      expect(validationSpy.input).toBe(fakeEmail)
     })
   })
 
@@ -103,7 +103,7 @@ describe('Login', () => {
 
     waitFor(() => {
       expect(validationSpy.fieldName).toBe('password')
-      expect(validationSpy.fieldValue).toBe(fakePassword)
+      expect(validationSpy.input).toBe(fakePassword)
     })
   })
 
