@@ -3,7 +3,10 @@ import React from 'react'
 import { Login } from '@/presentation/pages'
 import { RemoteAuthentication } from '@/data/useCases/authentication'
 import { AxiosHttpAdapterClient } from '@/infra/http/axiosHttpClient'
-import { ValidationBuilder, ValidationComposite } from '@/validation/validators'
+import {
+  ValidationBuilder as Builder,
+  ValidationComposite,
+} from '@/validation/validators'
 import { makeApiUrl } from '../../http'
 import { makeLocalAccessToken } from '../../http/localSaveAccessTokenFactory'
 
@@ -13,8 +16,8 @@ export const MakeLogin = () => {
   const remoteAuthentication = new RemoteAuthentication(url, axiosHttpClient)
 
   const validationComposite = ValidationComposite.build([
-    ...ValidationBuilder.field('email').required().email().build(),
-    ...ValidationBuilder.field('password').required().minLength(5).build(),
+    ...Builder.field('email').required().email().build(),
+    ...Builder.field('password').required().minLength(5).build(),
   ])
 
   return (
