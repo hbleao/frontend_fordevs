@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import S from './styles.scss'
 
@@ -13,7 +13,12 @@ import {
 import { SignUpProps } from './types'
 import { isValidFields } from '@/presentation/helpers'
 
-export const SignUp = ({ validation, addAccount }: SignUpProps) => {
+export const SignUp = ({
+  validation,
+  addAccount,
+  saveAccessToken,
+}: SignUpProps) => {
+  const navigate = useNavigate()
   const [field, setField] = useState({
     name: '',
     email: '',
@@ -40,12 +45,16 @@ export const SignUp = ({ validation, addAccount }: SignUpProps) => {
     try {
       setIsSubmitLoading(true)
 
-      await addAccount.add({
+      const account = await addAccount.add({
         name: field.name,
         email: field.email,
         password: field.password,
         passwordConfirmation: field.passwordConfirmation,
       })
+
+      await saveAccessToken.save(account.accessToken)
+
+      navigate('/')
     } catch (error) {
       setMessageLoginServiceError(error.message)
     } finally {

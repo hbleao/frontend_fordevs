@@ -9,7 +9,7 @@ export function isValidFields(
   let errors: ValidationErrors = {}
 
   for (const name of fieldNames) {
-    const error = validation.validate(name, fields[`${name}`])
+    const error = validation.validate(name, fields)
     errors = {
       ...errors,
       [`${name}`]: error || '',

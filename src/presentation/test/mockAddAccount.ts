@@ -1,12 +1,13 @@
 import { AccountModel } from '@/domain/models'
 import { AddAccount, AddAccountParams } from '@/domain/useCases'
+import { mockAccount } from '@/domain/test'
 
 export class AddAccountSpy implements AddAccount {
-  public account
+  public account = mockAccount()
   public params: AddAccountParams
   public callsCount = 0
 
-  add(params: AddAccountParams): Promise<AccountModel> {
+  async add(params: AddAccountParams): Promise<AccountModel> {
     this.params = params
     this.callsCount++
 

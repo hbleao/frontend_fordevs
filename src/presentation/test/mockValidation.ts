@@ -3,11 +3,11 @@ import { Validation } from '../protocols'
 export class ValidationSpy implements Validation {
   public errorMessage: string
   public fieldName: string
-  public fieldValue: string
+  public input: object
 
-  validate(fieldName: string, fieldValue: string): string {
+  validate(fieldName: string, input: object): string {
     this.fieldName = fieldName
-    this.fieldValue = fieldValue
+    this.input = input
     return this.errorMessage
   }
 }

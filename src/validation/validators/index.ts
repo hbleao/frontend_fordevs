@@ -1,5 +1,6 @@
 export * from './requiredField'
 export * from './email/emailValidation'
 export * from './minLength'
+export * from './compareFields'
 export * from './composite'
 export * from './validationBuilder'

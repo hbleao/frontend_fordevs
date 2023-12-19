@@ -3,14 +3,16 @@ import { FieldValidation } from '@/validation/protocols'
 
 export class CompareFieldsValidation implements FieldValidation {
   field: string
-  private valueToCompare: string
+  private fieldToCompare: string
 
-  constructor(field: string, valueToCompare: string) {
+  constructor(field: string, fieldToCompare: string) {
     this.field = field
-    this.valueToCompare = valueToCompare
+    this.fieldToCompare = fieldToCompare
   }
 
-  validate(value: string): Error {
-    return value === this.valueToCompare ? null : new InvalidFieldError()
+  validate(input: object): Error {
+    return input[this.field] === input[this.fieldToCompare]
+      ? null
+      : new InvalidFieldError()
   }
 }
