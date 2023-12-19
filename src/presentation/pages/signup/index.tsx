@@ -107,7 +107,7 @@ export const SignUp = ({
         />
         <Button
           type="submit"
-          data-testid="signupButton"
+          data-testid="create-account"
           disabled={
             !!fieldErrors.name ||
             !!fieldErrors.email ||
@@ -117,11 +117,7 @@ export const SignUp = ({
         >
           Criar conta
         </Button>
-        <Link
-          to="/login"
-          className={S.createAccount}
-          data-testid="login-button"
-        >
+        <Link to="/login" className={S.createAccount} data-testid="goto-login">
           Logar na plataforma
         </Link>
         <FormStatus

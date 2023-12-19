@@ -11,8 +11,9 @@ import {
   Input,
 } from '@/presentation/components'
 
-import { LoginProps } from './types'
 import { isValidFields } from '@/presentation/helpers'
+
+import { LoginProps } from './types'
 
 export const Login = ({
   validation,
@@ -85,7 +86,7 @@ export const Login = ({
         />
         <Button
           type="submit"
-          data-testid="loginButton"
+          data-testid="submit-button"
           disabled={!!fieldErrors.email || !!fieldErrors.password}
         >
           Logar
@@ -93,7 +94,7 @@ export const Login = ({
         <Link
           to="/signup"
           className={S.createAccount}
-          data-testid="signup-button"
+          data-testid="goto-signup"
         >
           Criar conta
         </Link>
