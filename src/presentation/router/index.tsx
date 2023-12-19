@@ -5,13 +5,18 @@ import '../styles/reset.scss'
 
 export type RoutesProps = {
   MakeLogin: React.FunctionComponent
+  MakeSignUp: React.FunctionComponent
 }
 
-export const Routes = ({ MakeLogin }: RoutesProps) => {
+export const Routes = ({ MakeLogin, MakeSignUp }: RoutesProps) => {
   const router = createBrowserRouter([
     {
       path: '/login',
       element: <MakeLogin />,
+    },
+    {
+      path: '/signup',
+      element: <MakeSignUp />,
     },
   ])
 

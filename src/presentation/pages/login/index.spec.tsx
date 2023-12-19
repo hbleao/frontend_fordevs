@@ -40,8 +40,8 @@ const makeSut = ({
   authenticationSpyError = false,
 }: MakeSutProps) => {
   const validationSpy = new ValidationSpy()
-  const authenticationSpy = new AuthenticationSpy(authenticationSpyError)
   const fakeErrorMessage = faker.lorem.words()
+  const authenticationSpy = new AuthenticationSpy(authenticationSpyError)
   const saveAccessTokenMock = new SaveAccessTokenMock()
 
   validationSpy.errorMessage = validationSpyError ? fakeErrorMessage : null
@@ -68,7 +68,7 @@ const makeSut = ({
 describe('Login', () => {
   it('should start with initial state', async () => {
     const { validationSpy } = makeSut({ validationSpyError: true })
-    const spinner = screen.queryByTestId('spinner')
+    const spinner = screen.queryByTestId('loader')
     expect(spinner).not.toBeInTheDocument()
 
     const button = screen.getByTestId('loginButton') as HTMLButtonElement
@@ -83,24 +83,28 @@ describe('Login', () => {
     })
   })
 
-  it('should call validation with correct email value', () => {
+  it('should call validation with correct email value', async () => {
     const { validationSpy } = makeSut({ validationSpyError: true })
     const fakeEmail = faker.internet.email()
 
     populateField('email', fakeEmail)
 
-    expect(validationSpy.fieldName).toBe('email')
-    expect(validationSpy.fieldValue).toBe(fakeEmail)
+    waitFor(() => {
+      expect(validationSpy.fieldName).toBe('email')
+      expect(validationSpy.input).toBe(fakeEmail)
+    })
   })
 
-  it('should call validation with correct password value', () => {
+  it('should call validation with correct password value', async () => {
     const { validationSpy } = makeSut({ validationSpyError: true })
     const fakePassword = faker.internet.password()
 
     populateField('password', fakePassword)
 
-    expect(validationSpy.fieldName).toBe('password')
-    expect(validationSpy.fieldValue).toBe(fakePassword)
+    waitFor(() => {
+      expect(validationSpy.fieldName).toBe('password')
+      expect(validationSpy.input).toBe(fakePassword)
+    })
   })
 
   it('should show email error if validation fails', () => {
