@@ -10,14 +10,13 @@ export class AxiosHttpAdapterClient implements HttpPostClient<any, any> {
   async post(params: HttpPostParams<any>): Promise<HttpResponse<any>> {
     try {
       const httpResponse = await axios.post(params.url, params.body)
-      console.log(httpResponse)
       return {
         statusCode: httpResponse.status,
         body: httpResponse.data,
       }
     } catch (error) {
       return {
-        statusCode: error.response.statusCode,
+        statusCode: error.response.status,
         body: error.response.data,
       }
     }

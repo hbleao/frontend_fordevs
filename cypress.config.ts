@@ -5,7 +5,7 @@ export default defineConfig({
     baseUrl: 'http://localhost:3000',
     supportFile: false,
     viewportWidth: 1440,
-    viewportHeight: 800,
+    viewportHeight: 1000,
   },
   component: {
     devServer: {

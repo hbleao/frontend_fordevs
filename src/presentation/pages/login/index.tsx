@@ -71,7 +71,7 @@ export const Login = ({
         <Input
           type="email"
           name="email"
-          placeholder="Digite seu email"
+          label="Digite seu email"
           value={field.email}
           onChange={(e) => setField({ ...field, email: e.target.value })}
           errorMessage={fieldErrors.email}
@@ -79,7 +79,7 @@ export const Login = ({
         <Input
           type="password"
           name="password"
-          placeholder="Digite sua senha"
+          label="Digite sua senha"
           value={field.password}
           onChange={(e) => setField({ ...field, password: e.target.value })}
           errorMessage={fieldErrors.password}
@@ -87,7 +87,7 @@ export const Login = ({
         <Button
           type="submit"
           data-testid="submit-button"
-          disabled={!!fieldErrors.email || !!fieldErrors.password}
+          disabled={!!fieldErrors.email || !!fieldErrors.password || isLoading}
         >
           Logar
         </Button>
