@@ -23,7 +23,7 @@ const simulateValidSubmit = (
   email = faker.internet.email(),
   password = faker.internet.password(),
 ) => {
-  const submitButton = screen.getByTestId('loginButton')
+  const submitButton = screen.getByTestId('submit-button')
 
   populateField('email', email)
   populateField('password', password)
@@ -71,7 +71,7 @@ describe('Login', () => {
     const spinner = screen.queryByTestId('loader')
     expect(spinner).not.toBeInTheDocument()
 
-    const button = screen.getByTestId('loginButton') as HTMLButtonElement
+    const button = screen.getByTestId('submit-button') as HTMLButtonElement
     expect(button.disabled).toBe(true)
 
     waitFor(() => {
@@ -154,7 +154,9 @@ describe('Login', () => {
     makeSut({})
     populateField('email', faker.internet.email())
     populateField('password', faker.internet.password())
-    const submitButton = screen.getByTestId('loginButton') as HTMLButtonElement
+    const submitButton = screen.getByTestId(
+      'submit-button',
+    ) as HTMLButtonElement
 
     waitFor(() => {
       expect(submitButton.disabled).toBe(false)

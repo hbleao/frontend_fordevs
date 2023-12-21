@@ -74,7 +74,7 @@ export const SignUp = ({
         <Input
           type="text"
           name="name"
-          placeholder="Digite seu nome"
+          label="Digite seu nome"
           value={field.name}
           onChange={(e) => setField({ ...field, name: e.target.value })}
           errorMessage={fieldErrors.name}
@@ -82,7 +82,7 @@ export const SignUp = ({
         <Input
           type="email"
           name="email"
-          placeholder="Digite seu email"
+          label="Digite seu email"
           value={field.email}
           onChange={(e) => setField({ ...field, email: e.target.value })}
           errorMessage={fieldErrors.email}
@@ -90,7 +90,7 @@ export const SignUp = ({
         <Input
           type="password"
           name="password"
-          placeholder="Digite sua senha"
+          label="Digite sua senha"
           value={field.password}
           onChange={(e) => setField({ ...field, password: e.target.value })}
           errorMessage={fieldErrors.password}
@@ -98,7 +98,7 @@ export const SignUp = ({
         <Input
           type="password"
           name="passwordConfirmation"
-          placeholder="Repita sua senha"
+          label="Repita sua senha"
           value={field.passwordConfirmation}
           onChange={(e) =>
             setField({ ...field, passwordConfirmation: e.target.value })
@@ -107,7 +107,7 @@ export const SignUp = ({
         />
         <Button
           type="submit"
-          data-testid="signupButton"
+          data-testid="create-account"
           disabled={
             !!fieldErrors.name ||
             !!fieldErrors.email ||
@@ -117,11 +117,7 @@ export const SignUp = ({
         >
           Criar conta
         </Button>
-        <Link
-          to="/login"
-          className={S.createAccount}
-          data-testid="login-button"
-        >
+        <Link to="/login" className={S.createAccount} data-testid="goto-login">
           Logar na plataforma
         </Link>
         <FormStatus

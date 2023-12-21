@@ -69,7 +69,7 @@ const simulateSubmitForm = () => {
   populateField('password', password)
   populateField('passwordConfirmation', password)
 
-  const submitButton = screen.getByTestId('signupButton') as HTMLButtonElement
+  const submitButton = screen.getByTestId('create-account') as HTMLButtonElement
   fireEvent.submit(submitButton)
 }
 
@@ -89,7 +89,7 @@ describe('SignUp', () => {
     getFieldError('passwordConfirmation-error')
 
     waitFor(() => {
-      const button = screen.getByTestId('signupButton') as HTMLButtonElement
+      const button = screen.getByTestId('create-account') as HTMLButtonElement
       expect(button.disabled).toBe(true)
     })
   })
@@ -181,7 +181,9 @@ describe('SignUp', () => {
     populateField('email', faker.internet.email())
     populateField('password', password)
     populateField('passwordConfirmation', password)
-    const submitButton = screen.getByTestId('signupButton') as HTMLButtonElement
+    const submitButton = screen.getByTestId(
+      'create-account',
+    ) as HTMLButtonElement
 
     waitFor(() => {
       expect(submitButton.disabled).toBe(false)
@@ -196,7 +198,9 @@ describe('SignUp', () => {
     populateField('name', faker.internet.password())
     populateField('name', faker.internet.password())
 
-    const submitButton = screen.getByTestId('signupButton') as HTMLButtonElement
+    const submitButton = screen.getByTestId(
+      'create-account',
+    ) as HTMLButtonElement
 
     fireEvent.submit(submitButton)
 
@@ -215,7 +219,9 @@ describe('SignUp', () => {
     populateField('password', password)
     populateField('passwordConfirmation', password)
 
-    const submitButton = screen.getByTestId('signupButton') as HTMLButtonElement
+    const submitButton = screen.getByTestId(
+      'create-account',
+    ) as HTMLButtonElement
     fireEvent.submit(submitButton)
 
     expect(addAccountSpy.params).toEqual({

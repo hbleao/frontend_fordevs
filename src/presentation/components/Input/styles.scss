@@ -1,26 +1,57 @@
 @import "../../styles/colors.scss";
 
-input {
-  border: 1px solid $primaryLight;
-  line-height: 48px;
-  border-radius: 4px;
-  padding: 0 30px 0px 8px;
-
-  &:focus {
-    outline-color: $primaryLight;
-  }
-}
-
 .inputWrapper {
-  margin-top: 16px;
+  margin-top: 40px;
   position: relative;
 
   input {
+    border: none;
+    outline: none;
     width: 100%;
+    padding: 0 30px 0px 8px;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid $gray400;
+    transition: all 0.5s ease;
+    position: relative;
+
+    &:not([value=""]) {
+      & + label {
+        transform: scale(0.8) translateY(-24px);
+      }
+
+      &[data-status="valid"] {
+        border-bottom: 2px solid $success;
+      }
+      &[data-status="invalid"] {
+        border-bottom: 2px solid $primaryLight;
+      }
+    }
+
+  }
+
+  label {
+    position: absolute;
+    top: -4px;
+    left: 8px;
+    color: $gray700;
+    cursor: text;
+    transform-origin: 0%;
+    transform: translateY(0);
+    transform: scale(1); 
+    transition: transform 0.35s ease;
+  }
+
+  &:focus-within {
+    label {
+      transform: scale(0.8) translateY(-24px);
+    }
   }
 }
 
 .errorMessage {
-  margin-top: 4px;
+  font-size: 12px;
+  margin-top: 6px;
+  margin-left: 8px;
   color: red;
 }

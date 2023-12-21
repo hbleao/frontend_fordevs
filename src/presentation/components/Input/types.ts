@@ -1,8 +1,11 @@
 import { InputHTMLAttributes } from 'react'
 
-export type InputProps = React.DetailedHTMLProps<
+type InputTextProps = React.DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
-> & {
+>
+
+export type InputProps = Omit<InputTextProps, 'placeholder'> & {
   errorMessage?: string
+  label?: string
 }
